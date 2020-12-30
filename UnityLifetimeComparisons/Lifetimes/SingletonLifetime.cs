@@ -4,10 +4,9 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class TransientLifetime : LifetimeBase
+    class SingletonLifetime : LifetimeBase
     {
-
-        public TransientLifetime() : base(TypeLifetime.Transient, typeof(TransientLifetimeManager))
+        public SingletonLifetime() : base(TypeLifetime.Singleton, typeof(SingletonLifetimeManager))
         {
         }
 
@@ -15,9 +14,11 @@ namespace UnityLifetimeComparisons.Lifetimes
         {
             var parent = _container;
             var child = _container.CreateChildContainer();
-
             Console.WriteLine($"IsResolveEquals : {IsResolveEquals(parent, child)}");
+
             Console.WriteLine($"IsDisposed : {IsDisposed()}");
+
+
         }
 
     }
