@@ -4,12 +4,10 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class PerResolveLifetime : LifetimeBase<PerResolveLifetimeManager>
+    class PerResolveLifetime : LifetimeBase
     {
-
-        public PerResolveLifetime() : base(TypeLifetime.ContainerControlled)
-        {
-        }
+        public override string TypeLifeTimeName => nameof(TypeLifetime.PerResolve);
+        protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.PerResolve;
 
     }
 }

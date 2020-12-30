@@ -7,6 +7,9 @@ using UnityLifetimeComparisons.Lifetimes;
 
 namespace UnityLifetimeComparisons
 {
+    // https://github.com/nuitsjp/FluentTextTable
+    // https://github.com/unitycontainer/abstractions/blob/2b99c9686bc01c3ef22ef294ec3afd558b4cb994/src/Extensions/Lifetime/TypeLifetime.cs
+    // https://github.com/unitycontainer/abstractions/blob/2b99c9686bc01c3ef22ef294ec3afd558b4cb994/src/Extensions/Lifetime/InstanceLifetime.cs
     class Program
     {
         static readonly ILifetime[] _lifetimes = new ILifetime[]

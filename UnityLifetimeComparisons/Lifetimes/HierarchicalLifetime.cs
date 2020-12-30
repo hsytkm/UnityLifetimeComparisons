@@ -4,12 +4,11 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class HierarchicalLifetime : LifetimeBase<HierarchicalLifetimeManager>
+    class HierarchicalLifetime : LifetimeBase
     {
-
-        public HierarchicalLifetime() : base(TypeLifetime.ContainerControlled)
-        {
-        }
+        // Hierarchical と Scoped は同じ
+        public override string TypeLifeTimeName => nameof(TypeLifetime.Hierarchical);
+        protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.Hierarchical;
 
     }
 }

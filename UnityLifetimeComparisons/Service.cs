@@ -12,15 +12,17 @@ namespace UnityLifetimeComparisons
     {
         public Guid Guid { get; } = Guid.NewGuid();
 
-        public bool IsDisposed { get; private set; }
+        //public bool IsDisposed { get; private set; }
+        private bool _isDisposed;
+
         public Action? DisposeCallback { get; set; }
 
         public void Dispose()
         {
-            if (!IsDisposed)
+            if (!_isDisposed)
             {
                 DisposeCallback?.Invoke();
-                IsDisposed = true;
+                _isDisposed = true;
             }
         }
 

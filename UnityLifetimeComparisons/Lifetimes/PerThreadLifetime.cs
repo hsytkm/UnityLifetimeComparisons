@@ -4,12 +4,10 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class PerThreadLifetime : LifetimeBase<PerThreadLifetimeManager>
+    class PerThreadLifetime : LifetimeBase
     {
-
-        public PerThreadLifetime() : base(TypeLifetime.ContainerControlled)
-        {
-        }
+        public override string TypeLifeTimeName => nameof(TypeLifetime.PerThread);
+        protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.PerThread;
 
     }
 }

@@ -5,7 +5,7 @@ namespace UnityLifetimeComparisons
     record CheckupCertificate
     {
         public int Id { get; init; }
-        public string LifetimeManagerName { get; init; } = "";
+        public string TypeLifetimeName { get; init; } = "Unknown";
 
         /// <summary>
         /// 同一コンテナからインスタンスを取得した場合、同一インスタンスか？
@@ -28,7 +28,7 @@ namespace UnityLifetimeComparisons
         public bool IsDisposedRegisteredInstance { get; init; }
 
         /// <summary>
-        /// RegisterType()で登録済みのLifetimeManagerを再度別Typeの登録で使用できるか？
+        /// RegisterType()で登録済みのLifetimeManagerを再度別Typeの登録に使用できるか？
         /// </summary>
         public bool CanReuseLifetimeManager { get; init; }
     }
