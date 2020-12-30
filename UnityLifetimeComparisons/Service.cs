@@ -2,8 +2,9 @@
 
 namespace UnityLifetimeComparisons
 {
-    interface IService
+    interface IService : IEquatable<IService>
     {
+        Guid Guid { get; }
         Action? DisposeCallback { get; set; }
     }
 
@@ -21,6 +22,13 @@ namespace UnityLifetimeComparisons
                 DisposeCallback?.Invoke();
                 IsDisposed = true;
             }
+        }
+
+        public bool Equals(IService? other)
+        {
+            if (other is null) return false;
+            if (!ReferenceEquals(this, other)) return false;
+            return this.Guid == other.Guid;
         }
     }
 }

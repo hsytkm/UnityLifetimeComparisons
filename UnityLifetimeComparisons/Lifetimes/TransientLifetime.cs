@@ -4,20 +4,11 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class TransientLifetime : LifetimeBase
+    class TransientLifetime : LifetimeBase<TransientLifetimeManager>
     {
 
-        public TransientLifetime() : base(TypeLifetime.Transient, typeof(TransientLifetimeManager))
+        public TransientLifetime() : base(TypeLifetime.Transient)
         {
-        }
-
-        public override void DoTest()
-        {
-            var parent = _container;
-            var child = _container.CreateChildContainer();
-
-            Console.WriteLine($"IsResolveEquals : {IsResolveEquals(parent, child)}");
-            Console.WriteLine($"IsDisposed : {IsDisposed()}");
         }
 
     }

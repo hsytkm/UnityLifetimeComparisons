@@ -4,20 +4,25 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class SingletonLifetime : LifetimeBase
+    class SingletonLifetime : LifetimeBase<SingletonLifetimeManager>
     {
-        public SingletonLifetime() : base(TypeLifetime.Singleton, typeof(SingletonLifetimeManager))
+        public SingletonLifetime() : base(TypeLifetime.Singleton)
         {
         }
 
         public override void DoTest()
         {
-            var parent = _container;
-            var child = _container.CreateChildContainer();
-            Console.WriteLine($"IsResolveEquals : {IsResolveEquals(parent, child)}");
+            base.DoTest();
 
-            Console.WriteLine($"IsDisposed : {IsDisposed()}");
+            // シングルトンは登録を上書きできる
+            var preInstance = _container.Resolve<IService>();
+            _container.RegisterInstance<IService>(new Service(), InstanceLifetime.Singleton);
+            var newInstance = _container.Resolve<IService>();
 
+            if (!preInstance.Equals(newInstance))
+            {
+                Console.WriteLine("Override Registered Type");
+            }
 
         }
 
