@@ -4,9 +4,11 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class ContainerControlledTransient : LifetimeBase
+    /// <summary>
+    /// TypeLifetime.PerContainerTransient is the same as ContainerControlledTransientManager.
+    /// </summary>
+    class PerContainerTransientTypeLifetime : TypeLifetimeBase
     {
-        public override string TypeLifeTimeName => nameof(TypeLifetime.PerContainerTransient);
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.PerContainerTransient;
 
     }

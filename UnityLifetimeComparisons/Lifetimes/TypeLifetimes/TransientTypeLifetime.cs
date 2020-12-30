@@ -4,9 +4,11 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class TransientLifetime : LifetimeBase
+    /// <summary>
+    /// TypeLifetime.Transient is the same as TransientLifetimeManager.Instance.
+    /// </summary>
+    class TransientTypeLifetime : TypeLifetimeBase
     {
-        public override string TypeLifeTimeName => nameof(TypeLifetime.Transient);
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.Transient;
 
     }

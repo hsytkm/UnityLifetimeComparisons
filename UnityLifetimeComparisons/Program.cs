@@ -14,14 +14,14 @@ namespace UnityLifetimeComparisons
     {
         static readonly ILifetime[] _lifetimes = new ILifetime[]
         {
-            new TransientLifetime(),
-            new SingletonLifetime(),
-            new ContainerControlledLifetime(),
-            new ContainerControlledTransient(),
-            new HierarchicalLifetime(),
-            new PerResolveLifetime(),
-            new PerThreadLifetime(),
-            new ExternallyControlledLifetime(),
+            new TransientTypeLifetime(),
+            new SingletonTypeLifetime(),
+            new PerContainerTypeLifetime(),
+            new PerContainerTransientTypeLifetime(),
+            new HierarchicalTypeLifetime(),
+            new PerResolveTypeLifetime(),
+            new PerThreadTypeLifetime(),
+            new ExternalTypeLifetime(),
         };
 
         static async Task Main(string[] args)

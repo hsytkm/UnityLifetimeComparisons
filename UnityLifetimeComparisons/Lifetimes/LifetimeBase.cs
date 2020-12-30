@@ -6,35 +6,17 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    interface ILifetime
-    {
-        string TypeLifeTimeName { get; }
-        void DoTest();
-        Task<CheckupCertificate> CheckupAsync(int id);
-    }
-
     abstract class LifetimeBase : ILifetime, IDisposable
     {
         private bool _isDisposed = false;
 
         protected readonly IUnityContainer _container;
 
-        public abstract string TypeLifeTimeName { get; }
+        public abstract string LifeTimeName { get; }
 
-        public LifetimeBase()
-        {
-            _container = CreateContainer();
-        }
+        public LifetimeBase() => _container = CreateContainer();
 
-        protected abstract ITypeLifetimeManager GetTypeLifetimeManager();
-
-        private IUnityContainer CreateContainer()
-        {
-            var container = new UnityContainer();
-            var lifetimeManager = GetTypeLifetimeManager();
-            container.RegisterType<IService, Service>(lifetimeManager);
-            return container;
-        }
+        protected abstract IUnityContainer CreateContainer();
 
         protected static bool IsResolveEquals(IUnityContainer container1, IUnityContainer container2)
         {
@@ -75,38 +57,12 @@ namespace UnityLifetimeComparisons.Lifetimes
             return finalized;
         }
 
-        private bool CanReuseLifetimeManager()
-        {
-            try
-            {
-                using (var container = new UnityContainer())
-                {
-                    var lifetimeManager = GetTypeLifetimeManager();
-                    container.RegisterType<IService, Service>(lifetimeManager);
-                    container.RegisterType<IPerson, Person>(lifetimeManager);
-                }
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                // The lifetime manager is already registered.
-                // WithLifetime managers cannot be reused, please create a new one.
-                return false;
-            }
-        }
-
-        public virtual void DoTest()
-        {
-            //Console.WriteLine($"IsEqualInstanceFromSameContainer : {IsEqualInstanceFromSameContainer()}");
-            //Console.WriteLine($"IsEqualInstanceFromParentChildContainer : {IsEqualInstanceFromParentChildContainer()}");
-            //Console.WriteLine($"IsDisposed : {IsDisposedRegisteredInstance()}");
-            //Console.WriteLine($"CanReuseLifetimeManager : {CanReuseLifetimeManager()}");
-        }
+        protected abstract bool CanReuseLifetimeManager();
 
         public async Task<CheckupCertificate> CheckupAsync(int id) => new CheckupCertificate()
         {
             Id = id,
-            TypeLifetimeName = TypeLifeTimeName,
+            LifetimeName = LifeTimeName,
             IsEqualInstanceFromSameContainer = IsEqualInstanceFromSameContainer(),
             IsEqualInstanceFromParentChildContainer = IsEqualInstanceFromParentChildContainer(),
             IsEqualInstanceFromSameContainerOnOtherThread = await IsEqualInstanceFromSameContainerOnOtherThreadAsync(),

@@ -5,7 +5,7 @@ namespace UnityLifetimeComparisons
     record CheckupCertificate
     {
         public int Id { get; init; }
-        public string TypeLifetimeName { get; init; } = "Unknown";
+        public string LifetimeName { get; init; } = "Unknown";
 
         /// <summary>
         /// 同一コンテナからインスタンスを取得した場合、同一インスタンスか？

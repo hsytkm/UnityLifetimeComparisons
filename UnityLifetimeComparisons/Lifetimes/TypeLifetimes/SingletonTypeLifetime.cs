@@ -4,9 +4,11 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class SingletonLifetime : LifetimeBase
+    /// <summary>
+    /// TypeLifetime.Singleton is the same as SingletonLifetimeManager.
+    /// </summary>
+    class SingletonTypeLifetime : TypeLifetimeBase
     {
-        public override string TypeLifeTimeName => nameof(TypeLifetime.Singleton);
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.Singleton;
 
         //public override void DoTest()

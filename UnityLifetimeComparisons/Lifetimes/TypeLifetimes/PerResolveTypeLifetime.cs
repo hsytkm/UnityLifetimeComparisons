@@ -4,9 +4,11 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
-    class PerResolveLifetime : LifetimeBase
+    /// <summary>
+    /// TypeLifetime.PerResolve is the same as PerResolveLifetimeManager.
+    /// </summary>
+    class PerResolveTypeLifetime : TypeLifetimeBase
     {
-        public override string TypeLifeTimeName => nameof(TypeLifetime.PerResolve);
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.PerResolve;
 
     }
