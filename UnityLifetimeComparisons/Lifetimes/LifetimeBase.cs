@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
+using System.Threading.Tasks;
 using Unity;
 using Unity.Lifetime;
 
@@ -11,7 +10,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     {
         string LifeTimeName { get; }
         void DoTest();
-        //bool IsDisposedRegisteredSingleton();
+        Task<CheckupCertificate> CheckupAsync(int id);
     }
 
     abstract class LifetimeBase<T> : ILifetime, IDisposable
@@ -44,10 +43,8 @@ namespace UnityLifetimeComparisons.Lifetimes
             var s2 = container2.Resolve<IService>();
             return ReferenceEquals(s1, s2);
         }
-        protected static bool IsResolveEquals(IUnityContainer container) => IsResolveEquals(container, container);
-        protected bool IsResolveEquals() => IsResolveEquals(_container);
 
-        private static bool IsDisposed()
+        private static bool IsDisposedRegisteredInstance()
         {
             var finalized = false;
             using (var container = CreateContainer())
@@ -71,7 +68,7 @@ namespace UnityLifetimeComparisons.Lifetimes
                 {
                     var lifetimeManager = Activator.CreateInstance<T>();
                     container.RegisterType<IService, Service>(lifetimeManager);
-                    container.RegisterType<IService, Service>(lifetimeManager);
+                    container.RegisterType<IPerson, Person>(lifetimeManager);
                 }
                 return true;
             }
@@ -92,13 +89,31 @@ namespace UnityLifetimeComparisons.Lifetimes
             return IsResolveEquals(parent, child);
         }
 
+        private async Task<bool> IsEqualInstanceFromSameContainerOnOtherThreadAsync()
+        {
+            var s1 = _container.Resolve<IService>();
+            var s2 = await Task.Run(() => _container.Resolve<IService>());
+            return ReferenceEquals(s1, s2);
+        }
+
         public virtual void DoTest()
         {
-            Console.WriteLine($"IsEqualInstanceFromSameContainer : {IsEqualInstanceFromSameContainer()}");
-            Console.WriteLine($"IsEqualInstanceFromParentChildContainer : {IsEqualInstanceFromParentChildContainer()}");
-            Console.WriteLine($"IsDisposed : {IsDisposed()}");
-            Console.WriteLine($"CanReuseLifetimeManager : {CanReuseLifetimeManager()}");
+            //Console.WriteLine($"IsEqualInstanceFromSameContainer : {IsEqualInstanceFromSameContainer()}");
+            //Console.WriteLine($"IsEqualInstanceFromParentChildContainer : {IsEqualInstanceFromParentChildContainer()}");
+            //Console.WriteLine($"IsDisposed : {IsDisposedRegisteredInstance()}");
+            //Console.WriteLine($"CanReuseLifetimeManager : {CanReuseLifetimeManager()}");
         }
+
+        public async Task<CheckupCertificate> CheckupAsync(int id) => new CheckupCertificate()
+        {
+            Id = id,
+            LifetimeManagerName = LifeTimeName,
+            IsEqualInstanceFromSameContainer = IsEqualInstanceFromSameContainer(),
+            IsEqualInstanceFromParentChildContainer = IsEqualInstanceFromParentChildContainer(),
+            IsEqualInstanceFromSameContainerOnOtherThread = await IsEqualInstanceFromSameContainerOnOtherThreadAsync(),
+            IsDisposedRegisteredInstance = IsDisposedRegisteredInstance(),
+            CanReuseLifetimeManager = CanReuseLifetimeManager(),
+        };
 
         public void Dispose()
         {

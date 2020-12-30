@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Unity;
 using UnityLifetimeComparisons.Lifetimes;
 
@@ -20,18 +21,20 @@ namespace UnityLifetimeComparisons
             new ExternallyControlledLifetime(),
         };
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine(GetAssemblyVersionString() + Environment.NewLine);
 
-            foreach (var lifetime in _lifetimes)
-            {
-                Console.WriteLine($"--- {lifetime.LifeTimeName} --- ");
+            //foreach (var lifetime in _lifetimes)
+            //{
+            //    Console.WriteLine($"--- {lifetime.LifeTimeName} --- ");
+            //    lifetime.DoTest();
+            //    Console.WriteLine("\n\n");
+            //}
 
-                lifetime.DoTest();
-
-                Console.WriteLine("\n\n");
-            }
+            var checkupTasks = _lifetimes.Select(async (x, i) => await x.CheckupAsync(i + 1));
+            var checkupList = await Task.WhenAll(checkupTasks);
+            FluentTextTable.Build.MarkdownTable<CheckupCertificate>().WriteLine(checkupList);
 
             foreach (var d in _lifetimes.OfType<IDisposable>())
             {
