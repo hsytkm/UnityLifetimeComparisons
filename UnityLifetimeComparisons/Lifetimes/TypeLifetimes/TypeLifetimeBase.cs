@@ -21,21 +21,21 @@ namespace UnityLifetimeComparisons.Lifetimes
 
         protected abstract ITypeLifetimeManager GetTypeLifetimeManager();
 
-        protected override IUnityContainer CreateContainer()
+        protected override void RegisterToContainer(IUnityContainer container)
         {
-            var container = new UnityContainer();
             var lifetimeManager = GetTypeLifetimeManager();
             container.RegisterType<IService, Service>(lifetimeManager);
-            return container;
         }
 
         protected override bool CanReuseLifetimeManager()
         {
             try
             {
-                using (var container = new UnityContainer())
+                using (var container = CreateContainer())
                 {
                     var lifetimeManager = GetTypeLifetimeManager();
+
+                    // 同じ lifetimeManager を使用したいので、RegisterToContainer() は使用しない
                     container.RegisterType<IService, Service>(lifetimeManager);
                     container.RegisterType<IPerson, Person>(lifetimeManager);
                 }

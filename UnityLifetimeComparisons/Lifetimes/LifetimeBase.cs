@@ -14,9 +14,15 @@ namespace UnityLifetimeComparisons.Lifetimes
 
         public abstract string LifeTimeName { get; }
 
-        public LifetimeBase() => _container = CreateContainer();
+        public LifetimeBase()
+        {
+            _container = CreateContainer();
+            RegisterToContainer(_container);
+        }
 
-        protected abstract IUnityContainer CreateContainer();
+        protected static IUnityContainer CreateContainer() => new UnityContainer();
+
+        protected abstract void RegisterToContainer(IUnityContainer container);
 
         protected static bool IsResolveEquals(IUnityContainer container1, IUnityContainer container2)
         {
@@ -46,6 +52,7 @@ namespace UnityLifetimeComparisons.Lifetimes
             var finalized = false;
             using (var container = CreateContainer())
             {
+                RegisterToContainer(container);
                 var service = container.Resolve<IService>();
                 service.DisposeCallback = () => { finalized = true; };
             }
