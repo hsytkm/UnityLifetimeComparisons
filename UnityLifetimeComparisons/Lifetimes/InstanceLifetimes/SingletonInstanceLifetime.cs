@@ -19,9 +19,11 @@ namespace UnityLifetimeComparisons.Lifetimes
             _container.RegisterInstance<IService>(new Service(), InstanceLifetime.Singleton);
             var newInstance = _container.Resolve<IService>();
 
-            if (preInstance.Equals(newInstance)) throw new Exception("謎ぃ");
-
-            return "Singleton can override registered type.";
+            if (!preInstance.Equals(newInstance))
+            {
+                return "Singleton : 登録済み情報を上書きできる";
+            }
+            return null;
         }
 
     }

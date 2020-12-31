@@ -18,11 +18,11 @@ namespace UnityLifetimeComparisons.Lifetimes
             using var container = CreateContainer();
 
             container.RegisterType<ClassA>(TypeLifetime.PerResolve);
-            container.RegisterType<ClassB>(TypeLifetime.PerResolve);
-            container.RegisterType<ClassC>(TypeLifetime.PerResolve);
+            container.RegisterType<ClassB>();
+            container.RegisterType<ClassC>();
 
             var c1 = container.Resolve<ClassC>();
-            if (ReferenceEquals(c1.ClsA, c1.ClsAinClsB))
+            if (ReferenceEquals(c1.ClsA, c1.ClsB.ClsA))
             {
                 sb.Append("PerResolve : ClassC に共通の ClassA は 同じインスタンス");
             }
@@ -49,7 +49,6 @@ namespace UnityLifetimeComparisons.Lifetimes
             public ClassA ClsA { get; }
             public ClassB ClsB { get; }
             public ClassC(ClassA a, ClassB b) => (ClsA, ClsB) = (a, b);
-            public ClassA ClsAinClsB => ClsB.ClsA;
         }
     }
 }

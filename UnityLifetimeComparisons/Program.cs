@@ -21,14 +21,14 @@ namespace UnityLifetimeComparisons
             typeof(HierarchicalTypeLifetime),
             typeof(PerResolveTypeLifetime),
             typeof(PerThreadTypeLifetime),
-            typeof(ExternalTypeLifetime),
+            //typeof(ExternalTypeLifetime),     // External lifetime is only supported by Instance registrations.
         };
 
-        static readonly Type[] _instanceLifetimeTyps = new[]
+        static readonly Type[] _instanceLifetimeTypes = new[]
         {
             typeof(PerContainerInstanceLifetime),
             typeof(SingletonInstanceLifetime),
-            //typeof(ExternalInstanceLifetime),   // ◆Exception出るので調査するまで無効化
+            //typeof(ExternalInstanceLifetime), // External lifetime is only supported by Instance registrations.
         };
 
         static async Task Main(string[] args)
@@ -39,9 +39,11 @@ namespace UnityLifetimeComparisons
             await CheckupCommonAsync(_typeLifetimeTypes);
             CheckupIndividual(_typeLifetimeTypes);
 
+#if false   // ◆ちゃんと実装できていません。未確認
             Console.WriteLine("InstanceLifetimes" + Environment.NewLine);
-            await CheckupCommonAsync(_instanceLifetimeTyps);
-            CheckupIndividual(_instanceLifetimeTyps);
+            await CheckupCommonAsync(_instanceLifetimeTypes);
+            CheckupIndividual(_instanceLifetimeTypes);
+#endif
         }
 
         static async Task CheckupCommonAsync(Type[] lifetimeTypes)
@@ -61,7 +63,7 @@ namespace UnityLifetimeComparisons
             var lifetimes = lifetimeTypes.Select(static t => Activator.CreateInstance(t)).Cast<ILifetime>();
             var messages = lifetimes.Select(static x => x.CheckupIndividual());
 
-            foreach (var m in messages.OfType<string>())
+            foreach (var m in messages.Where(x => !string.IsNullOrEmpty(x)))
             {
                 Console.WriteLine("  - " + m + Environment.NewLine);
             }

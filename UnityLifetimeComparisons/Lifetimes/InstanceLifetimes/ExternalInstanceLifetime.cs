@@ -4,6 +4,7 @@ using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
+#if false   // External lifetime is only supported by Instance registrations.
     /// <summary>
     /// InstanceLifetime.External is the same as ExternallyControlledLifetimeManager.
     /// </summary>
@@ -13,4 +14,5 @@ namespace UnityLifetimeComparisons.Lifetimes
         public override string? CheckupIndividual() { return null; }
 
     }
+#endif
 }

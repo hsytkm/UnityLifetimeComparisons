@@ -70,11 +70,6 @@ namespace UnityLifetimeComparisons.Lifetimes
                 var service = container.Resolve<IService>();
                 service.DisposeCallback = () => { finalized = true; };
             }
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
             return finalized;
         }
 
