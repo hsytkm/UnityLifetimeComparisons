@@ -12,7 +12,6 @@ namespace UnityLifetimeComparisons
     {
         public Guid Guid { get; } = Guid.NewGuid();
 
-        //public bool IsDisposed { get; private set; }
         private bool _isDisposed;
 
         public Action? DisposeCallback { get; set; }
@@ -21,9 +20,10 @@ namespace UnityLifetimeComparisons
         {
             if (!_isDisposed)
             {
-                DisposeCallback?.Invoke();
                 _isDisposed = true;
             }
+
+            DisposeCallback?.Invoke();
         }
 
         public bool Equals(IService? other)

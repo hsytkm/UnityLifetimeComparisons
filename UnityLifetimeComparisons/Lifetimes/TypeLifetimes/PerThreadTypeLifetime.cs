@@ -10,6 +10,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     class PerThreadTypeLifetime : TypeLifetimeBase
     {
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.PerThread;
+        public override string? CheckupIndividual() { return null; }
 
     }
 }

@@ -10,6 +10,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     class ExternalInstanceLifetime : InstanceLifetimeBase
     {
         protected override IInstanceLifetimeManager GetInstanceLifetimeManager() => InstanceLifetime.External;
+        public override string? CheckupIndividual() { return null; }
 
     }
 }

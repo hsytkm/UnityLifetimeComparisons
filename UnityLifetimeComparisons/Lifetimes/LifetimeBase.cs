@@ -2,27 +2,42 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Unity;
-using Unity.Lifetime;
 
 namespace UnityLifetimeComparisons.Lifetimes
 {
     abstract class LifetimeBase : ILifetime, IDisposable
     {
         private bool _isDisposed = false;
-
         protected readonly IUnityContainer _container;
 
         public abstract string LifeTimeName { get; }
 
-        public LifetimeBase()
-        {
-            _container = CreateContainer();
-            RegisterToContainer(_container);
-        }
+        public LifetimeBase() => _container = CreateAndRegisterContainer();
 
         protected static IUnityContainer CreateContainer() => new UnityContainer();
 
+        private IUnityContainer CreateAndRegisterContainer()
+        {
+            var container = CreateContainer();
+            RegisterToContainer(container);
+            return container;
+        }
+
         protected abstract void RegisterToContainer(IUnityContainer container);
+
+        #region Checkups
+        protected abstract object GetLifetimeManager();
+
+        private bool CanDisposableLifetime()
+        {
+            var lifetile = GetLifetimeManager();
+            if (lifetile is IDisposable d)
+            {
+                d.Dispose();
+                return true;
+            }
+            return false;
+        }
 
         protected static bool IsResolveEquals(IUnityContainer container1, IUnityContainer container2)
         {
@@ -50,9 +65,8 @@ namespace UnityLifetimeComparisons.Lifetimes
         private bool IsDisposedRegisteredInstance()
         {
             var finalized = false;
-            using (var container = CreateContainer())
+            using (var container = CreateAndRegisterContainer())
             {
-                RegisterToContainer(container);
                 var service = container.Resolve<IService>();
                 service.DisposeCallback = () => { finalized = true; };
             }
@@ -65,17 +79,21 @@ namespace UnityLifetimeComparisons.Lifetimes
         }
 
         protected abstract bool CanReuseLifetimeManager();
+        #endregion
 
         public async Task<CheckupCertificate> CheckupAsync(int id) => new CheckupCertificate()
         {
             Id = id,
             LifetimeName = LifeTimeName,
+            CanDisposableLifetime = CanDisposableLifetime(),
             IsEqualInstanceFromSameContainer = IsEqualInstanceFromSameContainer(),
             IsEqualInstanceFromParentChildContainer = IsEqualInstanceFromParentChildContainer(),
             IsEqualInstanceFromSameContainerOnOtherThread = await IsEqualInstanceFromSameContainerOnOtherThreadAsync(),
             IsDisposedRegisteredInstance = IsDisposedRegisteredInstance(),
             CanReuseLifetimeManager = CanReuseLifetimeManager(),
         };
+
+        public abstract string? CheckupIndividual();
 
         public void Dispose()
         {

@@ -11,6 +11,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     {
         // TypeLifetime.Hierarchical and TypeLifetime.Scoped are same.
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.Hierarchical;
+        public override string? CheckupIndividual() { return null; }
 
     }
 }

@@ -10,6 +10,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     class ExternalTypeLifetime : TypeLifetimeBase
     {
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.External;
+        public override string? CheckupIndividual() { return null; }
 
     }
 }

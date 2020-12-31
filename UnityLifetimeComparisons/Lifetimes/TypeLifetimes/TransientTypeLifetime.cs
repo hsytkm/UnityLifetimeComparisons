@@ -10,6 +10,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     class TransientTypeLifetime : TypeLifetimeBase
     {
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.Transient;
+        public override string? CheckupIndividual() { return null; }
 
     }
 }

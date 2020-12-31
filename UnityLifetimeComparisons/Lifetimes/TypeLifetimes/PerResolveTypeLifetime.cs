@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Unity;
 using Unity.Lifetime;
 
@@ -11,5 +12,44 @@ namespace UnityLifetimeComparisons.Lifetimes
     {
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.PerResolve;
 
+        public override string? CheckupIndividual()
+        {
+            var sb = new StringBuilder();
+            using var container = CreateContainer();
+
+            container.RegisterType<ClassA>(TypeLifetime.PerResolve);
+            container.RegisterType<ClassB>(TypeLifetime.PerResolve);
+            container.RegisterType<ClassC>(TypeLifetime.PerResolve);
+
+            var c1 = container.Resolve<ClassC>();
+            if (ReferenceEquals(c1.ClsA, c1.ClsAinClsB))
+            {
+                sb.Append("PerResolve : ClassC に共通の ClassA は 同じインスタンス");
+            }
+
+            var c2 = container.Resolve<ClassC>();
+            if (!ReferenceEquals(c1.ClsA, c2.ClsA))
+            {
+                sb.AppendLine(" (でも異なる ClassC の各 ClassA は別インスタンス)");
+            }
+
+            return sb.ToString();
+        }
+
+        class ClassA { }
+
+        class ClassB
+        {
+            public ClassA ClsA { get; }
+            public ClassB(ClassA a) => ClsA = a;
+        }
+
+        class ClassC
+        {
+            public ClassA ClsA { get; }
+            public ClassB ClsB { get; }
+            public ClassC(ClassA a, ClassB b) => (ClsA, ClsB) = (a, b);
+            public ClassA ClsAinClsB => ClsB.ClsA;
+        }
     }
 }

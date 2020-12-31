@@ -8,6 +8,11 @@ namespace UnityLifetimeComparisons
         public string LifetimeName { get; init; } = "Unknown";
 
         /// <summary>
+        /// ライフタイムクラスがIDisposableか？
+        /// </summary>
+        public bool CanDisposableLifetime { get; init; }
+
+        /// <summary>
         /// 同一コンテナからインスタンスを取得した場合、同一インスタンスか？
         /// </summary>
         public bool IsEqualInstanceFromSameContainer { get; init; }

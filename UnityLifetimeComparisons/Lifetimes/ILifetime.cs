@@ -6,5 +6,6 @@ namespace UnityLifetimeComparisons.Lifetimes
     interface ILifetime
     {
         Task<CheckupCertificate> CheckupAsync(int id);
+        string? CheckupIndividual();
     }
 }

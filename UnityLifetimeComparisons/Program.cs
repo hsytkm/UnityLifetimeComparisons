@@ -36,13 +36,15 @@ namespace UnityLifetimeComparisons
             Console.WriteLine(GetAssemblyVersionString() + Environment.NewLine);
 
             Console.WriteLine("TypeLifetimes" + Environment.NewLine);
-            await DoTestAsync(_typeLifetimeTypes);
+            await CheckupCommonAsync(_typeLifetimeTypes);
+            CheckupIndividual(_typeLifetimeTypes);
 
             Console.WriteLine("InstanceLifetimes" + Environment.NewLine);
-            await DoTestAsync(_instanceLifetimeTyps);
+            await CheckupCommonAsync(_instanceLifetimeTyps);
+            CheckupIndividual(_instanceLifetimeTyps);
         }
 
-        static async Task DoTestAsync(Type[] lifetimeTypes)
+        static async Task CheckupCommonAsync(Type[] lifetimeTypes)
         {
             var lifetimes = lifetimeTypes.Select(static t => Activator.CreateInstance(t)).Cast<ILifetime>();
             var checkupTasks = lifetimes.Select(static async (x, i) => await x.CheckupAsync(i + 1));
@@ -50,6 +52,19 @@ namespace UnityLifetimeComparisons
             var checkupList = await Task.WhenAll(checkupTasks);
             FluentTextTable.Build.MarkdownTable<CheckupCertificate>().WriteLine(checkupList);
             Console.WriteLine(Environment.NewLine);
+
+            foreach (var d in lifetimes.OfType<IDisposable>()) d.Dispose();
+        }
+
+        static void CheckupIndividual(Type[] lifetimeTypes)
+        {
+            var lifetimes = lifetimeTypes.Select(static t => Activator.CreateInstance(t)).Cast<ILifetime>();
+            var messages = lifetimes.Select(static x => x.CheckupIndividual());
+
+            foreach (var m in messages.OfType<string>())
+            {
+                Console.WriteLine("  - " + m + Environment.NewLine);
+            }
 
             foreach (var d in lifetimes.OfType<IDisposable>()) d.Dispose();
         }

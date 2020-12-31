@@ -11,21 +11,19 @@ namespace UnityLifetimeComparisons.Lifetimes
     {
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.Singleton;
 
-        //public override void DoTest()
-        //{
-        //    base.DoTest();
+        public override string? CheckupIndividual()
+        {
+            var preInstance = _container.Resolve<IService>();
+            _container.RegisterType<IService, SpecialService>(TypeLifetime.Singleton);
+            var newInstance = _container.Resolve<IService>();
 
-        //    // シングルトンは登録を上書きできる
-        //    var preInstance = _container.Resolve<IService>();
-        //    _container.RegisterInstance<IService>(new Service(), InstanceLifetime.Singleton);
-        //    var newInstance = _container.Resolve<IService>();
+            if (preInstance.GetType() != newInstance.GetType())
+            {
+                return "Singleton : 登録済み情報を上書きできる";
+            }
+            return null;
+        }
 
-        //    if (!preInstance.Equals(newInstance))
-        //    {
-        //        Console.WriteLine("Override Registered Type");
-        //    }
-
-        //}
-
+        record SpecialService : Service;
     }
 }

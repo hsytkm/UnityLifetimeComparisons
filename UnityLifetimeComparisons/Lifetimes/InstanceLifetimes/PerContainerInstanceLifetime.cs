@@ -10,6 +10,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     class PerContainerInstanceLifetime : InstanceLifetimeBase
     {
         protected override IInstanceLifetimeManager GetInstanceLifetimeManager() => InstanceLifetime.PerContainer;
+        public override string? CheckupIndividual() { return null; }
 
     }
 }

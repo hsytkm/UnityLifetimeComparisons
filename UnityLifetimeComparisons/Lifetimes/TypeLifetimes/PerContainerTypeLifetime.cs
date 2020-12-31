@@ -11,6 +11,7 @@ namespace UnityLifetimeComparisons.Lifetimes
     {
         // TypeLifetime.PerContainer and TypeLifetime.ContainerControlled are same.
         protected override ITypeLifetimeManager GetTypeLifetimeManager() => TypeLifetime.PerContainer;
+        public override string? CheckupIndividual() { return null; }
 
     }
 }

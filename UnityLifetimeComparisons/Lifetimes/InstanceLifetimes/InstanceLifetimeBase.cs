@@ -20,6 +20,7 @@ namespace UnityLifetimeComparisons.Lifetimes
         }
 
         protected abstract IInstanceLifetimeManager GetInstanceLifetimeManager();
+        protected override object GetLifetimeManager() => GetInstanceLifetimeManager();
 
         protected override void RegisterToContainer(IUnityContainer container)
         {
